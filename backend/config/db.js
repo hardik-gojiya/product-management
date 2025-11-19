@@ -6,11 +6,17 @@ import mongoose from 'mongoose';
  */
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      // These options are now defaults in Mongoose 6+, but included for clarity
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-    });
+    // Accept either MONGODB_URI or MONGO_URI for flexibility
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI
+
+    if (!mongoUri || typeof mongoUri !== 'string') {
+      console.error('MongoDB connection string is missing. Set MONGODB_URI or MONGO_URI in your environment.')
+      process.exit(1)
+    }
+
+    const conn = await mongoose.connect(mongoUri, {
+      // These options are defaults in Mongoose 6+, kept here for clarity
+    })
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
