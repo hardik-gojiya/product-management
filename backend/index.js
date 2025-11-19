@@ -15,7 +15,13 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+// Allow the deployed frontend (Vercel) to access this API.
+// Provide the origin without path/query (only the scheme + host).
+const corsOptions = {
+  origin: 'https://product-management-git-main-hardiks-projects-d0dc79ee.vercel.app',
+  credentials: true, // allow cookies/auth headers
+};
+app.use(cors(corsOptions));
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
